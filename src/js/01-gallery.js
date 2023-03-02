@@ -2,31 +2,32 @@
 import { galleryItems } from './gallery-items';
 // Change code below this line
 
+console.log(galleryItems);
 //  Імпорт бібліотеки  і стилів
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
-console.log(galleryItems);
 
 
-const galleryGeneral = document.querySelector(".gallery");
+const gallery = document.querySelector('.gallery');
 
+// Додаю зображення із gallery-items.js до елемента (клас .gallery у HTML )
 
-//Додаємо галерею на сторінку
-const newArrayImages = galleryItems
-  .map(
-    (image) => `<a class="gallery__item" href="${image.original}">
-<img class="gallery__image" 
-src="${image.preview}" 
-alt="${image.description}" />
-</a>`
-  )
-  .join(""); // Дуже важливо!!!
-galleryGeneral.insertAdjacentHTML("afterbegin", newArrayImages);
+gallery.insertAdjacentHTML(
+  'afterbegin',
+  galleryItems
+    .map(
+      galleryItem =>
+        `<a class="gallery__item" href="${galleryItem.original}">
+        <img class="gallery__image"
+        src="${galleryItem.preview}" 
+        alt= "${galleryItem.description}"></a>`
+    )
+    .join('')
+);
 
-//Додаємо SimpleLightbox - бібліотеку JS для галереї
+// Застосування SimpleLightbox 
 
-let gallery = new SimpleLightbox(".gallery a", {
-    captions: true,
-    captionsData: "alt",
-    captionDelay: 250,
-  });
+let lightbox = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});

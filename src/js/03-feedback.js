@@ -1,8 +1,10 @@
+import throttle from 'lodash.throttle';
+
 const form = document.querySelector('.feedback-form');
 const email = document.querySelector('input');
 const message = document.querySelector('textarea');
 
-//Колбєк функція для контроля чи є запис в полях
+//Колбєк функція для контроля чи є запис в полях  і збереження  данних в локал схов.
 function onInput(e) {
   if (email.value !== '' || message.value !== '') {
     const formCurrentValue = {
@@ -18,7 +20,7 @@ function onInput(e) {
 }
 
 //Прослуховуємо  подію input на формі
-form.addEventListener('input', onInput);
+form.addEventListener('input', throttle(onInput, 500));
 
 //Распарсити дані з локал.сховища
 try {

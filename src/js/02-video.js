@@ -6,39 +6,27 @@ const iframe = document.querySelector('iframe');
 const player = new Player(iframe);
 
 // Колбєк-функція для отримання і зберігання поточного часу
-const onPlay = function () {
-  try {
-    player.getCurrentTime().then(function (seconds) {
-      localStorage.setItem(
-        'videoplayer-current-time',
-        JSON.stringify(Math.floor(seconds))
-      );
-    });
-  } catch (error) {
-    console.error('Произошла ошибка: ' + error);
-  }
+const onPlay = function (e) {
+  localStorage.setItem(
+    'videoplayer-current-time',
+    JSON.stringify(Math.floor(e.seconds))
+  );
 };
 
 // Прослуховуємо подію  timeupdate на об'єкті Player  (timeupdate - подія, яка виникає при зміні поточного часу відео)+ throttle раз в секунду
 player.on('timeupdate', throttle(onPlay, 1000));
 
-//Рaспарсити значення часу
+//Распарсити значення часу
 const onPlayAgain = function () {
   try {
-    const savedTime = localStorage.getItem('videoplayer-current-time');
-    const timeParsed = JSON.parse(savedTime);
-    player.setCurrentTime(timeParsed).then(function () {});
+    const timeParsed = JSON.parse(
+      localStorage.getItem('videoplayer-current-time')
+    );
+    player.setCurrentTime(timeParsed);
   } catch (error) {
-    switch (error.name) {
-      case 'RangeError':
-        // the time was less than 0 or greater than the video’s duration
-        break;
-
-      default:
-        // some other error occurred
-        break;
-    }
+    console.log(' Виникла помилка' + error);
   }
 };
+
 // Прослуховуємо подію play на об'єкті Player
 player.on('play', onPlayAgain);

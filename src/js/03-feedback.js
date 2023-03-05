@@ -1,22 +1,17 @@
 import throttle from 'lodash.throttle';
 
 const form = document.querySelector('.feedback-form');
-const email = document.querySelector('input');
-const message = document.querySelector('textarea');
+const emailInput = document.querySelector('[name="email"]');
+const messageInput = document.querySelector('[name="message"]');
 
-//Колбєк функція для контроля чи є запис в полях  і збереження  данних в локал схов.
-function onInput(e) {
-  if (email.value !== '' || message.value !== '') {
-    const formCurrentValue = {
-      email: e.currentTarget.elements.email.value,
-      message: e.currentTarget.elements.message.value,
-    };
-    //Зберігаємо кожну зміну в локал.сховище
-    localStorage.setItem(
-      'feedback-form-state',
-      JSON.stringify(formCurrentValue)
-    );
-  }
+//Колбєк функція для збереження  данних в локал схов.
+function onInput() {
+  const formCurrentValue = {
+    email: emailInput.value,
+    message: messageInput.value,
+  };
+  //Зберігаємо кожну зміну в локал.сховище
+  localStorage.setItem('feedback-form-state', JSON.stringify(formCurrentValue));
 }
 
 //Прослуховуємо  подію input на формі
@@ -29,8 +24,8 @@ try {
   );
   //Записати дані з распарсених данних до  інпутів
   if (isFormCurrentValue) {
-    email.value = isFormCurrentValue.email;
-    message.value = isFormCurrentValue.message;
+    emailInput.value = isFormCurrentValue.email;
+    messageInput.value = isFormCurrentValue.message;
   }
 } catch (error) {
   console.log('Помилка' + error);
@@ -38,19 +33,22 @@ try {
 
 //Прослуховуємо  подію submit
 form.addEventListener('submit', e => {
-    
-  //Перезавантажуємо сторінку
-  e.preventDefault();
+  if (emailInput.value !== '' && messageInput.value !== '') {
+    //Перезавтаження сторінки
+    e.preventDefault();
 
-  //В консолі відображаємо дані
-  const formCurrentValue = {
-    email: email.value,
-    message: message.value,
-  };
-  console.log(formCurrentValue);
+    //В консолі відображено дані
+    const formCurrentValue = {
+      email: emailInput.value,
+      message: messageInput.value,
+    };
+    console.log(formCurrentValue);
 
-  //Очищення сховища
-  localStorage.removeItem('feedback-form-state');
-  email.value = '';
-  message.value = '';
+    //Очищення сховища
+    localStorage.removeItem('feedback-form-state');
+    emailInput.value = '';
+    messageInput.value = '';
+  } else {
+    alert('Заповніть всі поля!');
+  }
 });
